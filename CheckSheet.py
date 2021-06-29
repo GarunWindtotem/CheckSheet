@@ -1,41 +1,32 @@
 import pandas as pd #Daten
 from matplotlib import pyplot as plt # plots
 import numpy as np
-# import openpyxl
 # für Timeseries Daten
 from datetime import datetime
 from datetime import date # todays date
-#import seaborn as sns
-
-import math   # for py
 
 # import os
 now = datetime.now()
-
-
 
 today = date.today().strftime("%d.%m.%Y")
 
 # MESSUNG DEFINIEREN
 
 ##### DATAFRAME #####
-soll = 0
-OT = 0.002
-UT = 0.002
+soll = 20
+OT = 2
+UT = 2
 toleranz = OT + UT
-print(toleranz)
 ### laufende Mittelwerte / Standardabweichung anzeigen ja/nein?
 rolling_bool = True
 
 ### DIAGRAMM ####
 
-plot_title = "Check Sheet - Aero-Scale - MZ 25ml, leakage during measurement lower"
+plot_title = "Check Sheet - Aero-Scale - measure head temperature"
 plot_subtitle = f'{today} PW'
 
 xlabel = "Messung Nr."
 ylabel = "Temperatur [°C]"
-
-
 
 # größe der Texte im Chart
 size = 45
@@ -66,11 +57,6 @@ plot_label_OTUT = "OTG, UTG"
 plot_label_SOLL = "SOLL"
 plot_label_Mittelwert = "Mittelwert"
 
-
-##### OHNE VERWENDUNG ######
-pi = math.pi
-e = math.e
-
 pfad = "D:\\Github\\CheckSheet\\"            # Zuhause Pfad
 # pfad = "C:\\Users\\p.waitz\\Python\\CheckSheet\\"   # Geschäftsrechner Pfad
 pfad_input = "Input\\df_input.csv"
@@ -81,30 +67,16 @@ pfad_onedrive = "D:\\OneDrive\\CheckSheet\\"
 # xticks
 rotation = 0
 
-
 # Bezugsschriftgröße
-
 
 # output größe der bilder
 h = 16*1.431*1.0264
 v = 9*0.997*0.9973
 dpi = 200
 
-
-
 # CSV einlesen
 df = pd.read_csv(pfad + pfad_input, sep = ";", decimal = ',')
-#df
 
-
-
-# Datentypen
-df.dtypes
-
-
-
-
-# rolling_anzahl = 5
 ### 10 % der Datenwerte
 if len(df["value"]) < 20:
     rolling_anzahl = 3
@@ -112,10 +84,6 @@ if len(df["value"]) < 20:
 else:
     rolling_anzahl = int(len(df["value"])*0.1)
     rolling_anzahl2 = int(len(df["value"])*0.05)
-print(rolling_anzahl)
-print(rolling_anzahl2)
-
-
 
 # df["SOLL"] = soll
 df["OTG"] = soll + OT
@@ -124,7 +92,6 @@ df["SOLL"] = soll
 
 sigma = df["value"].std()
 mean = df["value"].mean()
-print(f' sigma= {sigma} mean= {mean}')
 
 df["value_mean"] = mean
 df["value_std+"] = mean + sigma
@@ -137,42 +104,24 @@ df["std_rolling-"] = df["mean_rolling"] - df.value.rolling(window=rolling_anzahl
 
 df["streuung_prozent"] = 100 * ( (df["std_rolling+"] - df["mean_rolling"]) / toleranz )
 
-
 streuung_min = round(df["streuung_prozent"].min(),1)
-print(streuung_min)
 streuung_max = round(df["streuung_prozent"].max(),1)
-print(streuung_max)
 streuung_mittel = ((df["value_std+"] - df["value_mean"]).mean()) / toleranz
-print(streuung_mittel)
-
-df.head(4)
-
 
 k = (df["OTG"].max() - df["UTG"].max())   # Spannweite zwischen OTG und UTG
-print(k)
 
 if df["value"].max() > df["OTG"].max():
-    print("value > OTG")
     y = float(max(df["value"]) - k*0.2)   # Referenzpunkt soll sein: OTG - 10% der Spannweite
-    print(f'y = {y}')
 else:
-    print("OTG > value")
     y = float(max(df["OTG"]) - k*0.2)   # Referenzpunkt soll sein: OTG - 10% der Spannweite
-    print(f'y = {y}')
-
 
 x=float((1/2)*df["x_axis"].count()+1)
-print(f'x = {x}')
 
 OTG = df["OTG"].max()
-print(OTG)
-
 
 df.to_excel(pfad+pfad_output+"df.xlsx")
 
-
 x_axis=df["x_axis"].tolist()
-x_axis
 len(x_axis)
 
 # def y_axis_thousands(x, pos):
@@ -255,9 +204,9 @@ elif max(x_axis) <= 10:
 
 if rolling_bool == True:
     plt.savefig(pfad + pfad_output + "diagram dynamic mean.png", dpi=dpi, bbox_inches='tight')
-#     plt.savefig(pfad_onedrive + "diagram dynamic mean.png", dpi = dpi, bbox_inches='tight')
+    plt.savefig(pfad_onedrive + "diagram dynamic mean.png", dpi = dpi, bbox_inches='tight')
 else:
     plt.savefig(pfad + pfad_output + "diagram static mean.png", dpi=dpi, bbox_inches='tight')
-#     plt.savefig(pfad_onedrive + "diagram static mean.png", dpi = dpi, bbox_inches='tight')
+    plt.savefig(pfad_onedrive + "diagram static mean.png", dpi = dpi, bbox_inches='tight')
 
 plt.show()
