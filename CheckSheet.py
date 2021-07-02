@@ -22,7 +22,7 @@ rolling_bool = True
 
 ### DIAGRAMM ####
 
-plot_title = 'Check Sheet - Aero-Scale - MZ 25 ml "Leakage rate upper area during measurement" - 2.7.2021'
+plot_title = 'Check Sheet - Aero-Scale - MZ 25 ml \n "Leakage rate oben" - 2.7.2021'
 plot_subtitle = f'{today} PW'
 
 xlabel = "Messung Nr."
@@ -57,8 +57,8 @@ plot_label_OTUT = "OTG, UTG"
 plot_label_SOLL = "SOLL"
 plot_label_Mittelwert = "Mittelwert"
 
-# pfad = "D:\\Github\\CheckSheet\\"            # Zuhause Pfad
-pfad = "C:\\Users\\p.waitz\\Python\\CheckSheet\\"   # Geschäftsrechner Pfad
+pfad = "D:\\Github\\CheckSheet\\"            # Zuhause Pfad
+# pfad = "C:\\Users\\p.waitz\\Python\\CheckSheet\\"   # Geschäftsrechner Pfad
 pfad_input = "Input\\df_input.csv"
 pfad_output ="Output\\"
 
@@ -75,15 +75,15 @@ v = 9*0.997*0.9973
 dpi = 200
 
 # CSV einlesen
-df = pd.read_csv(pfad + pfad_input, sep = ";", decimal = ',')
+df = pd.read_csv(pfad + pfad_input, sep=";", decimal=',')
 
 ### 10 % der Datenwerte
 if len(df["value"]) < 20:
     rolling_anzahl = 3
     rolling_anzahl2 = 2
 else:
-    rolling_anzahl = int(len(df["value"])*0.1)
-    rolling_anzahl2 = int(len(df["value"])*0.05)
+    rolling_anzahl = int(len(df["value"])*0.05)
+    rolling_anzahl2 = int(len(df["value"])*0.025)
 
 # df["SOLL"] = soll
 df["OTG"] = soll + OT
@@ -119,7 +119,8 @@ x=float((1/2)*df["x_axis"].count()+1)
 
 OTG = df["OTG"].max()
 
-df.to_excel(pfad+pfad_output+"df.xlsx")
+####################
+df.to_csv(pfad+pfad_output+"df.csv")
 
 x_axis=df["x_axis"].tolist()
 len(x_axis)
@@ -195,10 +196,17 @@ plt.title(f'{plot_title}\n', fontsize=size*sizefactor_title)
 plt.suptitle(plot_subtitle, fontsize=size * sizefactor_subtitle, y=0.92)
 
 x_axis = df["x_axis"].tolist()
-if max(x_axis) > 10:
+# if max(x_axis) > 10:
+#     plt.xticks(np.arange(min(x_axis), max(x_axis) + 1, round(max(x_axis) / 10)))  # Teile x-achse in 10 Teile
+# elif max(x_axis) <= 10:
+#     plt.xticks(np.arange(min(x_axis), max(x_axis) + 1, 1))  # Teile x-achse nicht
+
+
+if len(x_axis) > 10:
     plt.xticks(np.arange(min(x_axis), max(x_axis) + 1, round(max(x_axis) / 10)))  # Teile x-achse in 10 Teile
-elif max(x_axis) <= 10:
+elif len(x_axis) <= 10:
     plt.xticks(np.arange(min(x_axis), max(x_axis) + 1, 1))  # Teile x-achse nicht
+
 
 # Diagramm als Bild exporieren und Auflösung definieren
 
