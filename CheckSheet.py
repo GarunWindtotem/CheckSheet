@@ -13,24 +13,24 @@ today = date.today().strftime("%d.%m.%Y")
 # MESSUNG DEFINIEREN
 
 ##### DATAFRAME #####
-soll = 20
-OT = 2
-UT = 2
+soll = 0
+OT = 0.001
+UT = 0.001
 toleranz = OT + UT
 ### laufende Mittelwerte / Standardabweichung anzeigen ja/nein?
 rolling_bool = True
 
 ### DIAGRAMM ####
 
-plot_title = "Check Sheet - Aero-Scale - measure head temperature"
+plot_title = 'Check Sheet - Aero-Scale - MZ 25 ml "Leakage rate upper area during measurement" - 2.7.2021'
 plot_subtitle = f'{today} PW'
 
 xlabel = "Messung Nr."
-ylabel = "Temperatur [°C]"
+ylabel = "leakage rate"
 
 # größe der Texte im Chart
 size = 45
-sizefactor_title = 1
+sizefactor_title = 0.8
 sizefactor_subtitle = 0.5
 sizefactor_textbox = 0.5
 sizefactor_xyticks = 0.5
@@ -57,8 +57,8 @@ plot_label_OTUT = "OTG, UTG"
 plot_label_SOLL = "SOLL"
 plot_label_Mittelwert = "Mittelwert"
 
-pfad = "D:\\Github\\CheckSheet\\"            # Zuhause Pfad
-# pfad = "C:\\Users\\p.waitz\\Python\\CheckSheet\\"   # Geschäftsrechner Pfad
+# pfad = "D:\\Github\\CheckSheet\\"            # Zuhause Pfad
+pfad = "C:\\Users\\p.waitz\\Python\\CheckSheet\\"   # Geschäftsrechner Pfad
 pfad_input = "Input\\df_input.csv"
 pfad_output ="Output\\"
 
@@ -191,7 +191,7 @@ plt.yticks(fontsize=size * sizefactor_xyticks)
 plt.ylabel(ylabel, fontsize=size * sizefactor_xylabel)
 plt.xlabel(xlabel, fontsize=size * sizefactor_xylabel)
 
-plt.title(f'{plot_title}\n', fontsize=size)
+plt.title(f'{plot_title}\n', fontsize=size*sizefactor_title)
 plt.suptitle(plot_subtitle, fontsize=size * sizefactor_subtitle, y=0.92)
 
 x_axis = df["x_axis"].tolist()
@@ -204,9 +204,9 @@ elif max(x_axis) <= 10:
 
 if rolling_bool == True:
     plt.savefig(pfad + pfad_output + "diagram dynamic mean.png", dpi=dpi, bbox_inches='tight')
-    plt.savefig(pfad_onedrive + "diagram dynamic mean.png", dpi = dpi, bbox_inches='tight')
+    # plt.savefig(pfad_onedrive + "diagram dynamic mean.png", dpi = dpi, bbox_inches='tight')
 else:
     plt.savefig(pfad + pfad_output + "diagram static mean.png", dpi=dpi, bbox_inches='tight')
-    plt.savefig(pfad_onedrive + "diagram static mean.png", dpi = dpi, bbox_inches='tight')
+    # plt.savefig(pfad_onedrive + "diagram static mean.png", dpi = dpi, bbox_inches='tight')
 
 plt.show()
