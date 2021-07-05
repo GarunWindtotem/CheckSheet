@@ -13,20 +13,21 @@ today = date.today().strftime("%d.%m.%Y")
 # MESSUNG DEFINIEREN
 
 ##### DATAFRAME #####
-soll = 0
-OT = 0.001
-UT = 0.001
+soll = 1
+OT = 0.01
+UT = 0.01
 toleranz = OT + UT
 ### laufende Mittelwerte / Standardabweichung anzeigen ja/nein?
 rolling_bool = True
 
 ### DIAGRAMM ####
-
-plot_title = 'Check Sheet - Aero-Scale - MZ 25 ml \n "Leakage rate oben" - 2.7.2021'
+### WIE SOLL DAS FILE HEISSEN?
+chart_name = "Ambient Pressure"
+plot_title = 'Check Sheet - Aero-Scale - Ambient Pressure\n 03.05. - 05.07.2021'
 plot_subtitle = f'{today} PW'
 
 xlabel = "Messung Nr."
-ylabel = "leakage rate"
+ylabel = "Luftdruck [bar]"
 
 # größe der Texte im Chart
 size = 45
@@ -57,8 +58,8 @@ plot_label_OTUT = "OTG, UTG"
 plot_label_SOLL = "SOLL"
 plot_label_Mittelwert = "Mittelwert"
 
-pfad = "D:\\Github\\CheckSheet\\"            # Zuhause Pfad
-# pfad = "C:\\Users\\p.waitz\\Python\\CheckSheet\\"   # Geschäftsrechner Pfad
+# pfad = "D:\\Github\\CheckSheet\\"            # Zuhause Pfad
+pfad = "C:\\Users\\p.waitz\\Python\\CheckSheet\\"   # Geschäftsrechner Pfad
 pfad_input = "Input\\df_input.csv"
 pfad_output ="Output\\"
 
@@ -70,20 +71,20 @@ rotation = 0
 # Bezugsschriftgröße
 
 # output größe der bilder
-h = 16*1.431*1.0264
-v = 9*0.997*0.9973
+h = 16*1.49
+v = 9*0.97
 dpi = 200
 
 # CSV einlesen
-df = pd.read_csv(pfad + pfad_input, sep=";", decimal=',')
+df = pd.read_csv(pfad + pfad_input, sep = ";", decimal = ',')
 
 ### 10 % der Datenwerte
 if len(df["value"]) < 20:
     rolling_anzahl = 3
     rolling_anzahl2 = 2
 else:
-    rolling_anzahl = int(len(df["value"])*0.05)
-    rolling_anzahl2 = int(len(df["value"])*0.025)
+    rolling_anzahl = int(len(df["value"])*0.1)
+    rolling_anzahl2 = int(len(df["value"])*0.05)
 
 # df["SOLL"] = soll
 df["OTG"] = soll + OT
@@ -119,8 +120,7 @@ x=float((1/2)*df["x_axis"].count()+1)
 
 OTG = df["OTG"].max()
 
-####################
-df.to_csv(pfad+pfad_output+"df.csv")
+df.to_excel(pfad+pfad_output+"df.xlsx")
 
 x_axis=df["x_axis"].tolist()
 len(x_axis)
@@ -196,25 +196,18 @@ plt.title(f'{plot_title}\n', fontsize=size*sizefactor_title)
 plt.suptitle(plot_subtitle, fontsize=size * sizefactor_subtitle, y=0.92)
 
 x_axis = df["x_axis"].tolist()
-# if max(x_axis) > 10:
-#     plt.xticks(np.arange(min(x_axis), max(x_axis) + 1, round(max(x_axis) / 10)))  # Teile x-achse in 10 Teile
-# elif max(x_axis) <= 10:
-#     plt.xticks(np.arange(min(x_axis), max(x_axis) + 1, 1))  # Teile x-achse nicht
-
-
-if len(x_axis) > 10:
+if max(x_axis) > 10:
     plt.xticks(np.arange(min(x_axis), max(x_axis) + 1, round(max(x_axis) / 10)))  # Teile x-achse in 10 Teile
-elif len(x_axis) <= 10:
+elif max(x_axis) <= 10:
     plt.xticks(np.arange(min(x_axis), max(x_axis) + 1, 1))  # Teile x-achse nicht
-
 
 # Diagramm als Bild exporieren und Auflösung definieren
 
 if rolling_bool == True:
-    plt.savefig(pfad + pfad_output + "diagram dynamic mean.png", dpi=dpi, bbox_inches='tight')
+    plt.savefig(pfad + pfad_output + chart_name + ".png", dpi=dpi, bbox_inches='tight')
     # plt.savefig(pfad_onedrive + "diagram dynamic mean.png", dpi = dpi, bbox_inches='tight')
 else:
-    plt.savefig(pfad + pfad_output + "diagram static mean.png", dpi=dpi, bbox_inches='tight')
+    plt.savefig(pfad + pfad_output + chart_name + ".png", dpi=dpi, bbox_inches='tight')
     # plt.savefig(pfad_onedrive + "diagram static mean.png", dpi = dpi, bbox_inches='tight')
 
-plt.show()
+# plt.show()
