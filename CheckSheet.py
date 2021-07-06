@@ -13,21 +13,21 @@ today = date.today().strftime("%d.%m.%Y")
 # MESSUNG DEFINIEREN
 
 ##### DATAFRAME #####
-soll = 1
-OT = 0.01
-UT = 0.01
+soll = 254.5
+OT = 12
+UT = 8
 toleranz = OT + UT
 ### laufende Mittelwerte / Standardabweichung anzeigen ja/nein?
 rolling_bool = True
 
 ### DIAGRAMM ####
 ### WIE SOLL DAS FILE HEISSEN?
-chart_name = "Ambient Pressure"
-plot_title = 'Check Sheet - Aero-Scale - Ambient Pressure\n 03.05. - 05.07.2021'
+chart_name = "Scale Length MZ 1000 ml"
+plot_title = 'Check Sheet - Aero-Scale - Skalenlänge\n 06.05. - 17.07.2021'
 plot_subtitle = f'{today} PW'
 
 xlabel = "Messung Nr."
-ylabel = "Luftdruck [bar]"
+ylabel = "Skalenlänge [mm]"
 
 # größe der Texte im Chart
 size = 45
