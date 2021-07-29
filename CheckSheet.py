@@ -1,9 +1,9 @@
-import pandas as pd #Daten
-from matplotlib import pyplot as plt # plots
+import pandas as pd  # Daten
+from matplotlib import pyplot as plt  # plots
 import numpy as np
 # für Timeseries Daten
 from datetime import datetime
-from datetime import date # todays date
+from datetime import date  # todays date
 
 # import os
 now = datetime.now()
@@ -13,32 +13,43 @@ today = date.today().strftime("%d.%m.%Y")
 # MESSUNG DEFINIEREN
 
 ##### DATAFRAME #####
-soll = 254.5
-OT = 12
-UT = 8
+soll = 55
+OT = 5
+UT = 5
 toleranz = OT + UT
 ### laufende Mittelwerte / Standardabweichung anzeigen ja/nein?
 rolling_bool = True
 
-### DIAGRAMM ####
-### WIE SOLL DAS FILE HEISSEN?
-chart_name = "Scale Length MZ 1000 ml"
-plot_title = 'Check Sheet - Aero-Scale - Skalenlänge\n 06.05. - 17.07.2021'
-plot_subtitle = f'{today} PW'
+### Datum Achse ja/nein
+date_axis = False
 
-xlabel = "Messung Nr."
-ylabel = "Skalenlänge [mm]"
+#### TextBox an/aus
+text_box = False
+
+### DIAGRAMM ####
+### WIE SOLL DAS DIAGRAMM UND FILE BESCHRIFTET SEIN?
+chart_name = "Luftfeuchtigkeit Kalibrierlabor"
+plot_title = 'Luftfeuchtigkeit Kalibrierlabor (01.02. - 22.07.2021)\n'
+plot_subtitle = f'{today} PW'
+ylabel = "Luftfeuchtigkeit [%]"
+
+if date_axis == True:
+    xlabel = "Datum"
+else:
+    xlabel = "Messung Nr."
 
 # größe der Texte im Chart
 size = 45
 sizefactor_title = 0.8
-sizefactor_subtitle = 0.5
+sizefactor_subtitle = 0.65
 sizefactor_textbox = 0.5
 sizefactor_xyticks = 0.5
 sizefactor_xylabel = 0.7
 sizefactor_marker = 0.2
-sizefactor_marker2 = sizefactor_marker*0.5
+sizefactor_marker2 = sizefactor_marker * 0.5
 sizefactor_legend = 0.7
+y_subtitle = 0.98
+
 
 # Linien Stärke
 lws = 3
@@ -58,10 +69,10 @@ plot_label_OTUT = "OTG, UTG"
 plot_label_SOLL = "SOLL"
 plot_label_Mittelwert = "Mittelwert"
 
-# pfad = "D:\\Github\\CheckSheet\\"            # Zuhause Pfad
-pfad = "C:\\Users\\p.waitz\\Python\\CheckSheet\\"   # Geschäftsrechner Pfad
+pfad = "D:\\Github\\CheckSheet\\"  # Zuhause Pfad
+# pfad = "C:\\Users\\p.waitz\\Python\\CheckSheet\\"   # Geschäftsrechner Pfad
 pfad_input = "Input\\df_input.csv"
-pfad_output ="Output\\"
+pfad_output = "Output\\"
 
 pfad_onedrive = "D:\\OneDrive\\CheckSheet\\"
 
@@ -71,20 +82,20 @@ rotation = 0
 # Bezugsschriftgröße
 
 # output größe der bilder
-h = 16*1.49
-v = 9*0.97
+h = 16 * 1.49
+v = 9 * 0.97
 dpi = 200
 
 # CSV einlesen
-df = pd.read_csv(pfad + pfad_input, sep = ";", decimal = ',')
+df = pd.read_csv(pfad + pfad_input, sep=";", decimal=',')
 
 ### 10 % der Datenwerte
 if len(df["value"]) < 20:
     rolling_anzahl = 3
     rolling_anzahl2 = 2
 else:
-    rolling_anzahl = int(len(df["value"])*0.1)
-    rolling_anzahl2 = int(len(df["value"])*0.05)
+    rolling_anzahl = int(len(df["value"]) * 0.1)
+    rolling_anzahl2 = int(len(df["value"]) * 0.05)
 
 # df["SOLL"] = soll
 df["OTG"] = soll + OT
@@ -100,29 +111,31 @@ df["value_std-"] = mean - sigma
 
 df["mean_rolling"] = df.value.rolling(window=rolling_anzahl, min_periods=1).mean()
 df["mean_rolling2"] = df.value.rolling(window=rolling_anzahl2, min_periods=1).mean()
-df["std_rolling+"] = df["mean_rolling"] + df.value.rolling(window=rolling_anzahl, min_periods=1, center = True).std()
-df["std_rolling-"] = df["mean_rolling"] - df.value.rolling(window=rolling_anzahl, min_periods=1, center = True).std()
+df["std_rolling+"] = df["mean_rolling"] + df.value.rolling(window=rolling_anzahl, min_periods=1, center=True).std()
+df["std_rolling-"] = df["mean_rolling"] - df.value.rolling(window=rolling_anzahl, min_periods=1, center=True).std()
 
-df["streuung_prozent"] = 100 * ( (df["std_rolling+"] - df["mean_rolling"]) / toleranz )
 
-streuung_min = round(df["streuung_prozent"].min(),1)
-streuung_max = round(df["streuung_prozent"].max(),1)
-streuung_mittel = ((df["value_std+"] - df["value_mean"]).mean()) / toleranz
 
-k = (df["OTG"].max() - df["UTG"].max())   # Spannweite zwischen OTG und UTG
+if text_box == True:
+    df["streuung_prozent"] = 100 * ((df["std_rolling+"] - df["mean_rolling"]) / toleranz)
+    streuung_min = round(df["streuung_prozent"].min(), 1)
+    streuung_max = round(df["streuung_prozent"].max(), 1)
+    streuung_mittel = ((df["value_std+"] - df["value_mean"]).mean()) / toleranz
+
+k = (df["OTG"].max() - df["UTG"].max())  # Spannweite zwischen OTG und UTG
 
 if df["value"].max() > df["OTG"].max():
-    y = float(max(df["value"]) - k*0.2)   # Referenzpunkt soll sein: OTG - 10% der Spannweite
+    y = float(max(df["value"]) - k * 0.2)  # Referenzpunkt soll sein: OTG - 10% der Spannweite
 else:
-    y = float(max(df["OTG"]) - k*0.2)   # Referenzpunkt soll sein: OTG - 10% der Spannweite
+    y = float(max(df["OTG"]) - k * 0.2)  # Referenzpunkt soll sein: OTG - 10% der Spannweite
 
-x=float((1/2)*df["x_axis"].count()+1)
+x = float((1 / 2) * df["x_axis"].count() + 1)
 
 OTG = df["OTG"].max()
 
-df.to_excel(pfad+pfad_output+"df.xlsx")
+df.to_csv(pfad + pfad_output + "df.csv")
 
-x_axis=df["x_axis"].tolist()
+x_axis = df["x_axis"].tolist()
 len(x_axis)
 
 # def y_axis_thousands(x, pos):
@@ -161,20 +174,24 @@ if rolling_bool == True:
              label='', markersize=size * sizefactor_marker)
     plt.fill_between(df.x_axis, df['std_rolling+'], df['std_rolling-'], color='grey', alpha=0.5, label
     =f'laufendes sigma ({rolling_anzahl})')
-    plt.text(x - 0.5, y,
-             f'Streuung mittel = {round((100) * sigma / toleranz, 1)} % ({round(100 / ((100) * sigma / toleranz), 1)} sigma)\n min = {streuung_min} %,   max = {streuung_max} %',
-             horizontalalignment='center', size=size * sizefactor_textbox, style='italic',
-             bbox={'facecolor': "blue", 'alpha': 0.5, 'pad': 5})
+
+    if text_box == True:
+        plt.text(x - 0.5, y,
+                 f'Streuung mittel = {round((100) * sigma / toleranz, 1)} % ({round(100 / ((100) * sigma / toleranz), 1)} sigma)\n min = {streuung_min} %,   max = {streuung_max} %',
+                 horizontalalignment='center', size=size * sizefactor_textbox, style='italic',
+                 bbox={'facecolor': "blue", 'alpha': 0.5, 'pad': 5})
 
 else:
     plt.plot(df.x_axis, df["value_mean"], color='grey', linestyle='-.', linewidth=lws, label=plot_label_Mittelwert)
     plt.plot(df.x_axis, df["value_std+"], color='grey', linestyle='-', linewidth=lws, label="")
     plt.plot(df.x_axis, df["value_std-"], color='grey', linestyle='-', linewidth=lws, label="")
     plt.fill_between(df.x_axis, df['value_std+'], df['value_std-'], color='grey', alpha=0.5, label="±1 sigma")
-    plt.text(x - 0.5, y,
-             r'mittlere Streuung =  $\frac{sigma\ }{(1/2)\cdot(OTG\ - UTG)\ }\cdot100$ = 'f'{round((100) * sigma / toleranz, 1)} % (= {round(100 / ((100) * sigma / toleranz), 1)} sigma)',
-             horizontalalignment='center', size=size * sizefactor_textbox, style='italic',
-             bbox={'facecolor': "blue", 'alpha': 0.5, 'pad': 5})
+
+    if text_box == True:
+        plt.text(x - 0.5, y,
+                 r'mittlere Streuung =  $\frac{sigma\ }{(1/2)\cdot(OTG\ - UTG)\ }\cdot100$ = 'f'{round((100) * sigma / toleranz, 1)} % (= {round(100 / ((100) * sigma / toleranz), 1)} sigma)',
+                 horizontalalignment='center', size=size * sizefactor_textbox, style='italic',
+                 bbox={'facecolor': "blue", 'alpha': 0.5, 'pad': 5})
 
 # Legende
 plt.legend(loc='upper center',
@@ -192,8 +209,8 @@ plt.yticks(fontsize=size * sizefactor_xyticks)
 plt.ylabel(ylabel, fontsize=size * sizefactor_xylabel)
 plt.xlabel(xlabel, fontsize=size * sizefactor_xylabel)
 
-plt.title(f'{plot_title}\n', fontsize=size*sizefactor_title)
-plt.suptitle(plot_subtitle, fontsize=size * sizefactor_subtitle, y=0.92)
+plt.title(f'{plot_title}\n', fontsize=size * sizefactor_title)
+plt.suptitle(plot_subtitle, fontsize=size * sizefactor_subtitle, y=y_subtitle)
 
 x_axis = df["x_axis"].tolist()
 if max(x_axis) > 10:
