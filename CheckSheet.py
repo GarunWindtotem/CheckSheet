@@ -13,7 +13,7 @@ today = date.today().strftime("%d.%m.%Y")
 # MESSUNG DEFINIEREN
 
 ##### DATAFRAME #####
-soll = 55
+soll = 0
 OT = 5
 UT = 5
 toleranz = OT + UT
@@ -28,10 +28,10 @@ text_box = False
 
 ### DIAGRAMM ####
 ### WIE SOLL DAS DIAGRAMM UND FILE BESCHRIFTET SEIN?
-chart_name = "Luftfeuchtigkeit Kalibrierlabor"
-plot_title = 'Luftfeuchtigkeit Kalibrierlabor (01.02. - 22.07.2021)\n'
-plot_subtitle = f'{today} PW'
-ylabel = "Luftfeuchtigkeit [%]"
+chart_name = "Differenz (Luft-Wasser) Temperatur Kalibrierlabor 08 2021"
+plot_title = 'Qualitätsregelkarte - Differenz (Luft-Wasser) Temperatur Kalibrierlabor (01.08. - 18.08.2021)\n'
+plot_subtitle = f'{today} PW - interne Spezifikation'
+ylabel = "Differenz (Luft-Wasser) Temperatur [°C]"
 
 if date_axis == True:
     xlabel = "Datum"
