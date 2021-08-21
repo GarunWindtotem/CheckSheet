@@ -13,9 +13,9 @@ today = date.today().strftime("%d.%m.%Y")
 # MESSUNG DEFINIEREN
 
 ##### DATAFRAME #####
-soll = 0
-OT = 5
-UT = 5
+soll = 50
+OT = 35
+UT = 0
 toleranz = OT + UT
 ### laufende Mittelwerte / Standardabweichung anzeigen ja/nein?
 rolling_bool = True
@@ -28,10 +28,10 @@ text_box = False
 
 ### DIAGRAMM ####
 ### WIE SOLL DAS DIAGRAMM UND FILE BESCHRIFTET SEIN?
-chart_name = "Differenz (Luft-Wasser) Temperatur Kalibrierlabor 08 2021"
-plot_title = 'Qualitätsregelkarte - Differenz (Luft-Wasser) Temperatur Kalibrierlabor (01.08. - 18.08.2021)\n'
-plot_subtitle = f'{today} PW - interne Spezifikation'
-ylabel = "Differenz (Luft-Wasser) Temperatur [°C]"
+chart_name = "Luftfeuchtigkeit Kalibrierlabor 08 2021 ISO 4787 DIN EN ISO 8655-6"
+plot_title = 'Qualitätsregelkarte - Luftfeuchtigkeit Kalibrierlabor (01.08. - 18.08.2021)\n'
+plot_subtitle = f'{today} PW - Spezifikation ISO 4787, DIN EN ISO 8655-6'
+ylabel = "Luftfeuchtigkeit [%]"
 
 if date_axis == True:
     xlabel = "Datum"
