@@ -13,9 +13,9 @@ today = date.today().strftime("%d.%m.%Y")
 # MESSUNG DEFINIEREN
 
 ##### DATAFRAME #####
-soll = 50
+soll = 60
 OT = 35
-UT = 0
+UT = 10
 toleranz = OT + UT
 ### laufende Mittelwerte / Standardabweichung anzeigen ja/nein?
 rolling_bool = True
@@ -28,9 +28,9 @@ text_box = False
 
 ### DIAGRAMM ####
 ### WIE SOLL DAS DIAGRAMM UND FILE BESCHRIFTET SEIN?
-chart_name = "Luftfeuchtigkeit Kalibrierlabor 08 2021 ISO 4787 DIN EN ISO 8655-6"
-plot_title = 'Qualitätsregelkarte - Luftfeuchtigkeit Kalibrierlabor (01.08. - 18.08.2021)\n'
-plot_subtitle = f'{today} PW - Spezifikation ISO 4787, DIN EN ISO 8655-6'
+chart_name = "Testdaten Validierung v1_1"
+plot_title = 'Qualitätsregelkarte - Testdaten Luftfeuchtigkeit\n'
+plot_subtitle = f'{today} PW - Testdaten'
 ylabel = "Luftfeuchtigkeit [%]"
 
 if date_axis == True:
@@ -90,7 +90,7 @@ dpi = 200
 df = pd.read_csv(pfad + pfad_input, sep=";", decimal=',')
 
 ### 10 % der Datenwerte
-if len(df["value"]) < 20:
+if len(df["value"]) < 40:
     rolling_anzahl = 3
     rolling_anzahl2 = 2
 else:
