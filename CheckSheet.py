@@ -13,9 +13,9 @@ today = date.today().strftime("%d.%m.%Y")
 # MESSUNG DEFINIEREN
 
 ##### DATAFRAME #####
-soll = 60
-OT = 35
-UT = 10
+soll = 994
+OT = 0
+UT = 0
 toleranz = OT + UT
 ### laufende Mittelwerte / Standardabweichung anzeigen ja/nein?
 rolling_bool = True
@@ -28,10 +28,10 @@ text_box = False
 
 ### DIAGRAMM ####
 ### WIE SOLL DAS DIAGRAMM UND FILE BESCHRIFTET SEIN?
-chart_name = "Testdaten Validierung v1_1"
-plot_title = 'Qualitätsregelkarte - Testdaten Luftfeuchtigkeit\n'
-plot_subtitle = f'{today} PW - Testdaten'
-ylabel = "Luftfeuchtigkeit [%]"
+chart_name = "Luftdruck Drift Validierung v1_1"
+plot_title = 'Qualitätsregelkarte - Luftdruck (2.8.2021)\n'
+plot_subtitle = f'{today} PW - Betrachtung Drift'
+ylabel = "Luftdruck [hPa]"
 
 if date_axis == True:
     xlabel = "Datum"
