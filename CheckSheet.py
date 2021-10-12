@@ -13,9 +13,9 @@ today = date.today().strftime("%d.%m.%Y")
 # MESSUNG DEFINIEREN
 
 ##### DATAFRAME #####
-soll = 55
-OT = 5
-UT = 5
+soll = 50.0
+OT = 0.3
+UT = 0.3
 toleranz = OT + UT
 ### laufende Mittelwerte / Standardabweichung anzeigen ja/nein?
 rolling_bool = True
@@ -28,10 +28,10 @@ text_box = False
 
 ### DIAGRAMM ####
 ### WIE SOLL DAS DIAGRAMM UND FILE BESCHRIFTET SEIN?
-chart_name = "Luftfeuchtigkeit Kalibrierlabor"
-plot_title = 'Luftfeuchtigkeit Kalibrierlabor (01.02. - 22.07.2021)\n'
+chart_name = "opus Dispenser 50 ml - SN 51909011 REP25078 - 50 ml"
+plot_title = 'opus Dispenser 50 ml - SN 51909011 REP25078 - 50 ml \n'
 plot_subtitle = f'{today} PW'
-ylabel = "Luftfeuchtigkeit [%]"
+ylabel = "Volumen [ml]"
 
 if date_axis == True:
     xlabel = "Datum"
@@ -45,7 +45,7 @@ sizefactor_subtitle = 0.65
 sizefactor_textbox = 0.5
 sizefactor_xyticks = 0.5
 sizefactor_xylabel = 0.7
-sizefactor_marker = 0.2
+sizefactor_marker = 0.4
 sizefactor_marker2 = sizefactor_marker * 0.5
 sizefactor_legend = 0.7
 y_subtitle = 0.98
@@ -69,8 +69,8 @@ plot_label_OTUT = "OTG, UTG"
 plot_label_SOLL = "SOLL"
 plot_label_Mittelwert = "Mittelwert"
 
-pfad = "D:\\Github\\CheckSheet\\"  # Zuhause Pfad
-# pfad = "C:\\Users\\p.waitz\\Python\\CheckSheet\\"   # Geschäftsrechner Pfad
+# pfad = "D:\\Github\\CheckSheet\\"  # Zuhause Pfad
+pfad = "C:\\Users\\p.waitz\\Python\\CheckSheet\\"   # Geschäftsrechner Pfad
 pfad_input = "Input\\df_input.csv"
 pfad_output = "Output\\"
 
