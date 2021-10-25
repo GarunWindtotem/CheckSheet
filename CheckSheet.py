@@ -14,16 +14,14 @@ today = date.today().strftime("%d.%m.%Y")
 # MESSUNG DEFINIEREN
 
 ##### DATAFRAME #####
-<<<<<<< HEAD
-soll = 50.0
-OT = 0.3
-UT = 0.3
+soll = 0.01
+OT = 0.00001
+UT = 0.00001
 =======
 soll = 99.684
 A = 25.9
 OT = 0
 UT = 0
->>>>>>> cc91eb44cd24a6bdafd175e5c014d00d2ffcdbee
 toleranz = OT + UT
 ### laufende Mittelwerte / Standardabweichung anzeigen ja/nein?
 
@@ -39,17 +37,10 @@ text_box = False
 
 ### DIAGRAMM ####
 ### WIE SOLL DAS DIAGRAMM UND FILE BESCHRIFTET SEIN?
-<<<<<<< HEAD
-chart_name = "opus Dispenser 50 ml - SN 51909011 REP25078 - 50 ml"
-plot_title = 'opus Dispenser 50 ml - SN 51909011 REP25078 - 50 ml \n'
-plot_subtitle = f'{today} PW'
-ylabel = "Volumen [ml]"
-=======
 chart_name = "Verdunstung MZ 100 ml, ID 25.9mm"
 plot_title = 'Qualitätsregelkarte - Verdunstung MZ 100 ml, ID 25.9mm\n'
 plot_subtitle = f'{today} PW'
 ylabel = "Masse [g]"
->>>>>>> cc91eb44cd24a6bdafd175e5c014d00d2ffcdbee
 
 # if date_axis == True:
 #     xlabel = "Datum"
@@ -63,11 +54,8 @@ sizefactor_subtitle = 0.65
 sizefactor_textbox = 0.5
 sizefactor_xyticks = 0.5
 sizefactor_xylabel = 0.7
-<<<<<<< HEAD
-sizefactor_marker = 0.4
-=======
+
 sizefactor_marker = 0.5
->>>>>>> cc91eb44cd24a6bdafd175e5c014d00d2ffcdbee
 sizefactor_marker2 = sizefactor_marker * 0.5
 sizefactor_legend = 0.7
 y_subtitle = 0.98
