@@ -14,14 +14,10 @@ today = date.today().strftime("%d.%m.%Y")
 # MESSUNG DEFINIEREN
 
 ##### DATAFRAME #####
-soll = 0.01
-OT = 0.00001
-UT = 0.00001
-=======
-soll = 99.684
-A = 25.9
-OT = 0
-UT = 0
+soll = 1
+OT = 0.06
+UT = 0.06
+
 toleranz = OT + UT
 ### laufende Mittelwerte / Standardabweichung anzeigen ja/nein?
 
@@ -37,15 +33,15 @@ text_box = False
 
 ### DIAGRAMM ####
 ### WIE SOLL DAS DIAGRAMM UND FILE BESCHRIFTET SEIN?
-chart_name = "Verdunstung MZ 100 ml, ID 25.9mm"
-plot_title = 'Qualitätsregelkarte - Verdunstung MZ 100 ml, ID 25.9mm\n'
+chart_name = "Qualitätsregelkarte - opus 10 ml_10prozent_UT160"
+plot_title = 'Qualitätsregelkarte - opus 10 ml - 10% - (UT 160)\n'
 plot_subtitle = f'{today} PW'
-ylabel = "Masse [g]"
+ylabel = "Volumen [ml]"
 
 # if date_axis == True:
 #     xlabel = "Datum"
 # else:
-xlabel = "Minuten"
+xlabel = "Messung Nr."
 
 # größe der Texte im Chart
 size = 45
@@ -78,12 +74,12 @@ plot_label_OTUT = "OTG, UTG"
 plot_label_SOLL = "SOLL"
 plot_label_Mittelwert = "Mittelwert"
 
-# pfad = "D:\\Github\\CheckSheet\\"  # Zuhause Pfad
-pfad = "C:\\Users\\p.waitz\\Python\\CheckSheet\\"   # Geschäftsrechner Pfad
+pfad = "D:\\Github\\CheckSheet\\"  # Zuhause Pfad
+# pfad = "C:\\Users\\p.waitz\\Python\\CheckSheet\\"   # Geschäftsrechner Pfad
 pfad_input = "Input\\df_input.csv"
 pfad_output = "Output\\"
 
-pfad_onedrive = "D:\\OneDrive\\CheckSheet\\"
+# pfad_onedrive = "D:\\OneDrive\\CheckSheet\\"
 
 # xticks
 rotation = 0
@@ -98,30 +94,30 @@ dpi = 200
 # CSV einlesen
 df = pd.read_csv(pfad + pfad_input, sep=";", decimal=',')
 
-# ### 10 % der Datenwerte
-# if len(df["value"]) < 40:
-#     rolling_anzahl = 3
-#     rolling_anzahl2 = 2
-# else:
-#     rolling_anzahl = int(len(df["value"]) * 0.1)
-#     rolling_anzahl2 = int(len(df["value"]) * 0.05)
+### 10 % der Datenwerte
+if len(df["value"]) < 40:
+    rolling_anzahl = 3
+    rolling_anzahl2 = 2
+else:
+    rolling_anzahl = int(len(df["value"]) * 0.1)
+    rolling_anzahl2 = int(len(df["value"]) * 0.05)
 
-# # df["SOLL"] = soll
-# df["OTG"] = soll + OT
-# df["UTG"] = soll - UT
 # df["SOLL"] = soll
-#
-# sigma = df["value"].std()
-# mean = df["value"].mean()
-#
-# df["value_mean"] = mean
-# df["value_std+"] = mean + sigma
-# df["value_std-"] = mean - sigma
-#
-# df["mean_rolling"] = df.value.rolling(window=rolling_anzahl, min_periods=1).mean()
-# df["mean_rolling2"] = df.value.rolling(window=rolling_anzahl2, min_periods=1).mean()
-# df["std_rolling+"] = df["mean_rolling"] + df.value.rolling(window=rolling_anzahl, min_periods=1, center=True).std()
-# df["std_rolling-"] = df["mean_rolling"] - df.value.rolling(window=rolling_anzahl, min_periods=1, center=True).std()
+df["OTG"] = soll + OT
+df["UTG"] = soll - UT
+df["SOLL"] = soll
+
+sigma = df["value"].std()
+mean = df["value"].mean()
+
+df["value_mean"] = mean
+df["value_std+"] = mean + sigma
+df["value_std-"] = mean - sigma
+
+df["mean_rolling"] = df.value.rolling(window=rolling_anzahl, min_periods=1).mean()
+df["mean_rolling2"] = df.value.rolling(window=rolling_anzahl2, min_periods=1).mean()
+df["std_rolling+"] = df["mean_rolling"] + df.value.rolling(window=rolling_anzahl, min_periods=1, center=True).std()
+df["std_rolling-"] = df["mean_rolling"] - df.value.rolling(window=rolling_anzahl, min_periods=1, center=True).std()
 
 
 #
@@ -178,11 +174,11 @@ t = df["x_axis"].max()
 v = round(V/t, 5)
 
 
-plt.text(x, y,
-         f'Verdunstung pro min = {"%.2E" % Decimal(v)} g/min\n'
-         f'Verdunstung pro Fläche = {"%.2E" % Decimal(v/A)} g/min/mm²',
-         horizontalalignment='right', size=size * sizefactor_textbox, style='italic',
-         bbox={'facecolor': "blue", 'alpha': 0.5, 'pad': 5})
+# plt.text(x, y,
+#          f'Verdunstung pro min = {"%.2E" % Decimal(v)} g/min\n'
+#          f'Verdunstung pro Fläche = {"%.2E" % Decimal(v/A)} g/min/mm²',
+#          horizontalalignment='right', size=size * sizefactor_textbox, style='italic',
+#          bbox={'facecolor': "blue", 'alpha': 0.5, 'pad': 5})
 
 
 #
@@ -197,37 +193,48 @@ plt.text(x, y,
 #              color="grey", linewidth=lws, label="Einzelmesswerte", markersize=size * sizefactor_marker)
 #
 #     ### Darstellung der rolling Darstellung oder mit konstanten Werten
-#     if rolling_bool == True:
-#         # rolling
-#         plt.plot(df.x_axis, df['mean_rolling'], marker='', linestyle='-', color=schwarz, linewidth=lwb,
-#                  label=f'laufender Mittelwert ({rolling_anzahl})', markersize=size * sizefactor_marker)
-#         plt.plot(df.x_axis, df['mean_rolling2'], marker='', linestyle='-', color="black", alpha=0.55, linewidth=lws,
-#                  label=f'laufender Mittelwert ({rolling_anzahl2})', markersize=size * sizefactor_marker2)
-#
-#         plt.plot(df.x_axis, df['std_rolling+'], marker='', linestyle='', color=schwarz, linewidth=lws,
-#                  label='', markersize=size * sizefactor_marker)
-#         plt.plot(df.x_axis, df['std_rolling-'], marker='', linestyle='', color=schwarz, linewidth=lws,
-#                  label='', markersize=size * sizefactor_marker)
-#         plt.fill_between(df.x_axis, df['std_rolling+'], df['std_rolling-'], color='grey', alpha=0.5, label
-#         =f'laufendes sigma ({rolling_anzahl})')
-#
-#         if text_box == True:
-#             plt.text(x - 0.5, y,
-#                      f'Streuung mittel = {round((100) * sigma / toleranz, 1)} % ({round(100 / ((100) * sigma / toleranz), 1)} sigma)\n min = {streuung_min} %,   max = {streuung_max} %',
-#                      horizontalalignment='center', size=size * sizefactor_textbox, style='italic',
-#                      bbox={'facecolor': "blue", 'alpha': 0.5, 'pad': 5})
-#
-#     else:
-#         plt.plot(df.x_axis, df["value_mean"], color='grey', linestyle='-.', linewidth=lws, label=plot_label_Mittelwert)
-#         plt.plot(df.x_axis, df["value_std+"], color='grey', linestyle='-', linewidth=lws, label="")
-#         plt.plot(df.x_axis, df["value_std-"], color='grey', linestyle='-', linewidth=lws, label="")
-#         plt.fill_between(df.x_axis, df['value_std+'], df['value_std-'], color='grey', alpha=0.5, label="±1 sigma")
-#
-#         if text_box == True:
-#             plt.text(x - 0.5, y,
-#                      r'mittlere Streuung =  $\frac{sigma\ }{(1/2)\cdot(OTG\ - UTG)\ }\cdot100$ = 'f'{round((100) * sigma / toleranz, 1)} % (= {round(100 / ((100) * sigma / toleranz), 1)} sigma)',
-#                      horizontalalignment='center', size=size * sizefactor_textbox, style='italic',
-#                      bbox={'facecolor': "blue", 'alpha': 0.5, 'pad': 5})
+
+plt.plot(df.x_axis, df['OTG'], marker='', linestyle='-', color='red', linewidth=lwb,
+             label=f'OTG, UTG ({rolling_anzahl})', markersize=size * sizefactor_marker)
+plt.plot(df.x_axis, df['UTG'], marker='', linestyle='-', color='red', linewidth=lwb,
+             label=f'', markersize=size * sizefactor_marker)
+plt.plot(df.x_axis, df['SOLL'], marker='', linestyle='dotted', color='green', linewidth=lwb,
+             label=f'', markersize=size * sizefactor_marker)
+plt.plot(df.x_axis, df['value_mean'], marker='', linestyle='dotted', color='grey', linewidth=lwb,
+             label=f'', markersize=size * sizefactor_marker)
+
+
+if rolling_bool == True:
+    # rolling
+    plt.plot(df.x_axis, df['mean_rolling'], marker='', linestyle='-', color=schwarz, linewidth=lwb,
+             label=f'laufender Mittelwert ({rolling_anzahl})', markersize=size * sizefactor_marker)
+    plt.plot(df.x_axis, df['mean_rolling2'], marker='', linestyle='-', color="black", alpha=0.55, linewidth=lws,
+             label=f'laufender Mittelwert ({rolling_anzahl2})', markersize=size * sizefactor_marker2)
+
+    plt.plot(df.x_axis, df['std_rolling+'], marker='', linestyle='', color=schwarz, linewidth=lws,
+             label='', markersize=size * sizefactor_marker)
+    plt.plot(df.x_axis, df['std_rolling-'], marker='', linestyle='', color=schwarz, linewidth=lws,
+             label='', markersize=size * sizefactor_marker)
+    plt.fill_between(df.x_axis, df['std_rolling+'], df['std_rolling-'], color='grey', alpha=0.5, label
+    =f'laufendes sigma ({rolling_anzahl})')
+
+    if text_box == True:
+        plt.text(x - 0.5, y,
+                 f'Streuung mittel = {round((100) * sigma / toleranz, 1)} % ({round(100 / ((100) * sigma / toleranz), 1)} sigma)\n min = {streuung_min} %,   max = {streuung_max} %',
+                 horizontalalignment='center', size=size * sizefactor_textbox, style='italic',
+                 bbox={'facecolor': "blue", 'alpha': 0.5, 'pad': 5})
+
+else:
+    plt.plot(df.x_axis, df["value_mean"], color='grey', linestyle='-.', linewidth=lws, label=plot_label_Mittelwert)
+    plt.plot(df.x_axis, df["value_std+"], color='grey', linestyle='-', linewidth=lws, label="")
+    plt.plot(df.x_axis, df["value_std-"], color='grey', linestyle='-', linewidth=lws, label="")
+    plt.fill_between(df.x_axis, df['value_std+'], df['value_std-'], color='grey', alpha=0.5, label="±1 sigma")
+
+    if text_box == True:
+        plt.text(x - 0.5, y,
+                 r'mittlere Streuung =  $\frac{sigma\ }{(1/2)\cdot(OTG\ - UTG)\ }\cdot100$ = 'f'{round((100) * sigma / toleranz, 1)} % (= {round(100 / ((100) * sigma / toleranz), 1)} sigma)',
+                 horizontalalignment='center', size=size * sizefactor_textbox, style='italic',
+                 bbox={'facecolor': "blue", 'alpha': 0.5, 'pad': 5})
 
 # Legende
 plt.legend(loc='upper center',
